@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.6"
+        android:paddingTop="30px"
+        android:text="ПРИЛОЖЕНЬКА"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="48sp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20px"
+        android:gravity=""
+        android:background="@drawable/rounded_corners_veryperi"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30px"
+            android:text="Авторизация"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="32dp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/loginText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20px"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:inputType="text"
+            android:background="@drawable/rounded_corners_text_view"
+            android:hint="Логин"
+            android:textColorHint="#6667AB"
+            android:textColor="#6667AB"
+            android:textSize="25dp"
+            />
+
+        <EditText
+            android:id="@+id/passwordText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20px"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:background="@drawable/rounded_corners_text_view"
+            android:hint="Пароль"
+            android:textColorHint="#6667AB"
+            android:textColor="#6667AB"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            />
+
+        <Button
+            android:id="@+id/signInButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="120dp"
+            android:padding="30px"
+            android:text="ВОЙТИ"
+            android:background="@drawable/rounded_corners_button_veryperi"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+</LinearLayout>
