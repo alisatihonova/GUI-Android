@@ -8,7 +8,16 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
+import android.widget.Toast
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONObject
+import org.json.JSONStringer
 import java.io.IOException
+import java.lang.Math.random
 
 class ListActivity : Activity(){
     @SuppressLint("MissingInflatedId")
@@ -17,18 +26,16 @@ class ListActivity : Activity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_form)
 
-       // run("https://api.github.com/users/Evin1-/repos")
+        val client = OkHttpClient()
 
         val addButton = findViewById<Button>(R.id.addButton)
         val deleteButton = findViewById<Button>(R.id.deleteButton)
         val list = findViewById<ListView>(R.id.listOfThings)
 
-        //val client = OkHttpClient()
         val thingsArray = ArrayList<String>()
         val selectedArray = ArrayList<String>()
         val thingsAdapter: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, thingsArray)
         list.adapter = thingsAdapter
-        var strNum = 0
 
         list.setOnItemClickListener { adapterView, view, i, l ->
             var selected = thingsAdapter.getItem(i)
@@ -43,9 +50,39 @@ class ListActivity : Activity(){
         }
 
         addButton.setOnClickListener(View.OnClickListener () {
-            strNum++
-            thingsArray.add(strNum.toString())
-            thingsAdapter.notifyDataSetChanged()
+            var newResponse = ""
+            
+            //Нельзя выполнить HTTPS запрос в основной нити
+            //Ничего страшного, сделаем новую
+            //HTTP вот вообще нельзя нигде и никогда
+            Thread {
+                val request = Request.Builder()
+                    .url("https://techy-api.vercel.app/api/json")
+                    .build()
+
+                try {
+                    client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) {
+                            //Обработка неуспешного запроса
+                            newResponse = "The request was unsuccessful. Really sorry about it"
+                        } else {
+                            val jsonResponse = response.body!!.string()
+                            newResponse = JSONObject(jsonResponse).get("message").toString()
+                        }
+                    }
+                } catch (e: IOException) {
+                    //Нету ручек - нет конфетки
+                    //Обработка упавшего по причине отсутсвия интернета запроса
+                    newResponse = "There's no way sending request without an Internet connection"
+                }
+
+                //Нитка в нитке (наверное)
+                runOnUiThread {
+                    thingsArray.add(newResponse)
+                    thingsAdapter.notifyDataSetChanged()
+                }
+
+            }.start()
         })
 
         deleteButton.setOnClickListener(View.OnClickListener () {
@@ -58,15 +95,4 @@ class ListActivity : Activity(){
         })
 
     }
-
-    /*fun run(url:String) {
-        val request = Request.Builder().url(url).build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call:Call, e:IOException){}
-            override fun onResponse(call: Call, response: Response)
-            return response.body()?.strign())
-        })
-    }*/
-
 }
