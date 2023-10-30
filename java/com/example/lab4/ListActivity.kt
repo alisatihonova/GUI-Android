@@ -55,7 +55,7 @@ class ListActivity : Activity(){
         var thingsForArray = ArrayList<String>()
         if (!thingsList.isNullOrEmpty())
         {
-            thingsForArray = thingsList.split(",") as ArrayList<String>
+            thingsForArray = ArrayList<String>(thingsList.split(","))
             thingsArray.addAll(thingsForArray)
             thingsAdapter.notifyDataSetChanged()
         }
@@ -83,17 +83,26 @@ class ListActivity : Activity(){
                     .url("https://techy-api.vercel.app/api/json")
                     .build()
 
+                Log.i("Готов запрос", request.url.toString())
+
                 try {
+                    Log.i("Информационный лог", "Пробуем выполнить запрос")
                     client.newCall(request).execute().use { response ->
                         if (!response.isSuccessful) {
                             //Обработка неуспешного запроса
+
+                            Log.i("Очень жаль", "Запрос неуспешным оказался")
                             newResponse = "The request was unsuccessful. Really sorry about it"
                         } else {
+
+                            Log.i("Ничего себе", "Запрос прошел")
                             val jsonResponse = response.body!!.string()
                             newResponse = JSONObject(jsonResponse).get("message").toString()
                         }
                     }
                 } catch (e: IOException) {
+
+                    Log.e("Грустный лог", "Поймали IOException")
                     //Нету ручек - нет конфетки
                     //Обработка упавшего по причине отсутсвия интернета запроса
                     newResponse = "There's no way sending request without an Internet connection"
@@ -101,6 +110,7 @@ class ListActivity : Activity(){
 
                 //Нитка в нитке (наверное)
                 runOnUiThread {
+                    Log.i("Информационный лог", "Мы попали в runOnUiThread")
                     thingsArray.add(newResponse)
                     thingsAdapter.notifyDataSetChanged()
                 }
@@ -123,10 +133,36 @@ class ListActivity : Activity(){
     {
         //Сохранение данных в SharedPreferences
         super.onPause()
+        Log.i("Информационный лог", "Данные из ListActivity сейчас будут сохраняться")
         val sharedPref: SharedPreferences = getSharedPreferences("hello?", Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPref.edit()
 
         val allList: String = TextUtils.join(",", thingsArray)
         editor.putString("thingsList", allList).apply()
+        Log.i("Информационный лог", "Данные из ListActivity сохранились")
+    }
+
+    override fun onStart()
+    {
+        super.onStart()
+        Log.i("Информационный лог","Создан в методе onStart");
+    }
+
+    override fun onResume()
+    {
+        super.onResume()
+        Log.i("Информационный лог","Самый приятный, создан в методе onResume");
+    }
+
+    override fun onStop()
+    {
+        super.onStop()
+        Log.i("Информационный лог","Создан в методе onStop");
+    }
+
+    override fun onDestroy()
+    {
+        super.onDestroy()
+        Log.i("Информационный лог","Создан в методе onDestroy");
     }
 }
